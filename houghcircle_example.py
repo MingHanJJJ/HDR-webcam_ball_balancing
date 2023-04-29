@@ -1,3 +1,4 @@
+#ball tracking example code
 import cv2 as cv
 import numpy as np
 
@@ -20,8 +21,11 @@ while True:
             if prevCircle is not None:
                 if dist(chosen[0],chosen[1],prevCircle[0],prevCircle[1]) <= dist(i[0], i[1], prevCircle[0], prevCircle[1]):
                     chosen = i
+        #chosen[0], chosen[1] are x, y coordinations; chosen[2] represents the radius of circle that cv.circle() is drawing
         cv.circle(frame, (chosen[0], chosen[1]), 1, (0, 100, 100), 3)
         cv.circle(frame, (chosen[0], chosen[1]), chosen[2], (255, 0, 255), 3)
+
+        print(f"Center of the circle: ({chosen[0]}, {chosen[1]})")
         prevCircle = chosen
     cv.imshow("circles", frame)
 
