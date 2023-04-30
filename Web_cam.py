@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import serial_port
 
 
 class WebCam:
@@ -44,7 +45,6 @@ class WebCam:
 
     def start_webcam(self):
         
-        
         # This drives the program into an infinite loop.
         while(1):        
             # Captures the live stream frame-by-frame
@@ -66,21 +66,7 @@ class WebCam:
             print(len(rects))
             print("max w: %s, max h: %s" % (max_w, max_h))
 
-        
-
-            
-            # The bitwise and of the frame and mask is done so 
-            # that only the blue coloured objects are highlighted 
-            # and stored in res
-            # res = cv2.bit
-            # wise_and(frame,frame, mask= mask)
-            cv2.imshow('frame',frame)
-            # cv2.imshow('mask',mask)
-            # cv2.imshow('res',res)
-            #self.dectect_boundary(mask, 1)
-            #print("finished")
-            
-        
+            cv2.imshow('frame',frame)             
         
             # This displays the frame, mask 
             # and res which we created in 3 separate windows.

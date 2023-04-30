@@ -2,6 +2,7 @@
 import cv2 as cv
 import numpy as np
 
+
 videoCapture = cv.VideoCapture(0, cv.CAP_DSHOW)
 prevCircle = None 
 dist = lambda x1,y1,x2,y2: (x1-x2)**2+(y1-y2)**2
