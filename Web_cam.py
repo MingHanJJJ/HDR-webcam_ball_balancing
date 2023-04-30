@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from sympy import false
+import serial_port
 
 
 class WebCam:
@@ -11,7 +11,7 @@ class WebCam:
 
     def video_capture(self):
         # Webcamera no 0 is used to capture the frames
-        return cv2.VideoCapture(0)
+        return cv2.VideoCapture(0, cv2.CAP_DSHOW)
     
     def dectect_boundary(self, pixels, buffer_pixels):
         x_max = y_max = 0
@@ -44,32 +44,29 @@ class WebCam:
         return True
 
     def start_webcam(self):
+        
         # This drives the program into an infinite loop.
         while(1):        
             # Captures the live stream frame-by-frame
             _, frame = self.cap.read() 
             
             # color select
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            lower_blue = np.array([110,50,50])
-            upper_blue = np.array([130,255,255])
-        
-            # Here we are defining range of bluecolor in HSV
-            # This creates a mask of blue coloured 
-            # objects found in the frame.
-            mask = cv2.inRange(hsv, lower_blue, upper_blue)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            ret , thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
+            contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
-            # The bitwise and of the frame and mask is done so 
-            # that only the blue coloured objects are highlighted 
-            # and stored in res
-            # res = cv2.bitwise_and(frame,frame, mask= mask)
-            cv2.imshow('frame',frame)
-            # cv2.imshow('mask',mask)
-            # cv2.imshow('res',res)
-            #self.dectect_boundary(mask, 1)
-            #print("finished")
-            
-        
+            rects = []
+            max_w = 0
+            max_h = 0
+            for contour in contours:
+                x,y,w,h = cv2.boundingRect(contour)
+                max_w = max(max_w, w)
+                max_h = max(max_h, h)
+                rects.append((x,y,w,h))
+            print(len(rects))
+            print("max w: %s, max h: %s" % (max_w, max_h))
+
+            cv2.imshow('frame',frame)             
         
             # This displays the frame, mask 
             # and res which we created in 3 separate windows.
